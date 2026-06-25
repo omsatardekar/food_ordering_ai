@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
+from pydantic import BaseModel, Field
+from typing import List, Optional
 from datetime import datetime
 from bson import ObjectId
 
@@ -18,14 +18,18 @@ class PyObjectId(ObjectId):
     def __get_pydantic_json_schema__(cls, field_schema):
         field_schema.update(type="string")
 
-class User(BaseModel):
-    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+class OrderItem(BaseModel):
+    menu_item_id: PyObjectId
     name: str
-    email: EmailStr
-    password: str
-    role: str = "customer" # "admin" or "customer"
-    location: Optional[str] = None
-    phone_number: Optional[str] = None
+    quantity: int
+    price: float
+
+class Order(BaseModel):
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    user_id: PyObjectId
+    items: List[OrderItem]
+    total_amount: float
+    status: str = "Placed" # Placed, Confirmed, Preparing, Ready, Picked Up
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Config:

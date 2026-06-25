@@ -1,60 +1,57 @@
-# Food Ordering AI - Production Ready Foundation
+# Caramel & Clove - Food Ordering System
 
-A modern, full-stack food ordering system built with React (Vite) and FastAPI, featuring MongoDB and JWT Authentication.
+This is a full-stack food ordering website I built using React for the frontend and FastAPI (Python) for the backend. It's designed to be a complete solution for a restaurant, with separate sections for customers to order food and for admins to manage everything.
 
-## Project Architecture
+## Project Overview
 
-### Frontend (`/frontend`)
-- **React (Vite)**: Lighting fast frontend development.
-- **Tailwind CSS**: Modern, utility-first styling with custom glassmorphism components.
-- **React Router DOM**: Client-side routing with protected route logic.
-- **Context API**: Global state management for authentication.
-- **Axios**: Promised-based HTTP client with JWT interceptors.
+I wanted to create something that looks professional and works smoothly. The app handles everything from user registration and login to placing orders and tracking them in real-time.
 
-### Backend (`/backend`)
-- **FastAPI**: High-performance Python web framework.
-- **MongoDB**: NoSQL database for flexible data modeling.
-- **Motor**: Asynchronous MongoDB driver.
-- **Pydantic**: Data validation and settings management.
-- **JWT**: Secure token-based authentication.
+### Key Features
 
-## Setup Instructions
+#### For Customers:
+- **Browse Menu**: A clean, organized menu with categories and search.
+- **Smart Filtering**: easily find food based on price, spice level, or vegetarian choices.
+- **Shopping Cart**: Add multiple items, update quantities, and see a full price breakdown including taxes.
+- **Order Tracking**: See the status of your order (Placed, Preparing, Ready, etc.).
+- **User Profile**: Manage your details and see your order history.
+
+#### For Admins:
+- **Menu Management**: Add new dishes, update prices, or hide items that are out of stock.
+- **User Management**: View and manage customer accounts.
+- **Order Dashboard**: Track all incoming orders and update their status as they move through the kitchen.
+- **Analytics**: Quick overview of total orders and active customers.
+
+## Tech Stack
+
+- **Frontend**: React.js with Vite for a fast development experience. Use Tailwind CSS for the styling and glassmorphism effects.
+- **Backend**: FastAPI (Python) for handling API requests quickly and securely.
+- **Database**: MongoDB for storing menu items, users, and orders.
+- **Authentication**: JWT (JSON Web Tokens) to make sure only logged-in users can place orders.
+
+## How to Run it Locally
 
 ### Prerequisites
-- Python 3.8+
-- Node.js & npm
-- MongoDB Compass (Running locally on `localhost:27017`)
+- Make sure you have Python and Node.js installed.
+- You'll also need MongoDB running on your machine (default port 27017).
 
-### 1. Backend Setup
-1. Navigate to `backend/`
-2. Create a virtual environment: `python -m venv venv`
-3. Activate it: `venv\Scripts\activate` (Windows) or `source venv/bin/activate` (Mac/Linux)
-4. Install dependencies: `pip install -r requirements.txt`
-5. Create `.env` from `.env.example` and update your `JWT_SECRET`.
-6. Run the server: `uvicorn app.main:app --reload`
+### 1. Setting up the Backend
+1. Go to the `backend` folder.
+2. Create a virtual environment: `python -m venv venv`.
+3. Activate it: `venv\Scripts\activate` (Windows).
+4. Install the requirements: `pip install -r requirements.txt`.
+5. Create a `.env` file (copy from `.env.example`) and set your secret key.
+6. Start the server: `uvicorn app.main:app --reload`.
 
-### 2. Admin Creation
-To create the initial admin user, run:
-```bash
-python create_admin.py
-```
-*Default Credentials: admin@food.com / password123*
+### 2. Creating an Admin
+I made a script to quickly set up an admin account:
+`python create_admin.py`
+(Login: admin@food.com / Password: password123)
 
-### 3. Frontend Setup
-1. Navigate to `frontend/`
-2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev`
+### 3. Setting up the Frontend
+1. Go to the `frontend` folder.
+2. Run `npm install` to get all dependencies.
+3. Run `npm run dev` to start the app.
+4. Open the link shown in your terminal to see the site.
 
-## Authentication Flow
-1. **Signup**: Users can register as customers from the `/signup` page.
-2. **Login**: Users provide email/password. The backend verifies credentials and returns a JWT.
-3. **Role-Based Access**:
-   - `admin`: Redirected to `/admin/dashboard`. Can access Admin routes.
-   - `customer`: Redirected to `/dashboard`. Can access User routes.
-4. **JWT Interceptor**: Frontend automatically attaches the `Bearer token` to every request.
-
-## UI/UX Features
-- **Glassmorphism**: Premium design with blurred backgrounds and borders.
-- **Responsive Animations**: Smooth fade-in and slide-up transitions.
-- **Toast Notifications**: Real-time feedback for user actions.
-- **Protected Routes**: Secure navigation logic preventing unauthorized access.
+## How the Search Works
+I implemented a smart search logic that doesn't just look for exact names. It can pick up on keywords like "spicy", "cheap", or "veg" and filter the menu automatically. It uses a scoring system to show the most relevant results first.

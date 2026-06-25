@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 from bson import ObjectId
@@ -18,14 +18,16 @@ class PyObjectId(ObjectId):
     def __get_pydantic_json_schema__(cls, field_schema):
         field_schema.update(type="string")
 
-class User(BaseModel):
+class MenuItem(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     name: str
-    email: EmailStr
-    password: str
-    role: str = "customer" # "admin" or "customer"
-    location: Optional[str] = None
-    phone_number: Optional[str] = None
+    description: str
+    category: str # Starters, Main Course, Breads, Rice, Desserts, Beverages
+    price: float
+    is_vegetarian: bool = True
+    is_spicy: bool = False
+    availability: bool = True
+    image_url: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Config:

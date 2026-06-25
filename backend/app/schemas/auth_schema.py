@@ -1,4 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
+from datetime import datetime
+from typing import Optional
 
 class UserSignup(BaseModel):
     name: str = Field(..., min_length=2)
@@ -19,7 +21,7 @@ class UserResponse(BaseModel):
     name: str
     email: EmailStr
     role: str
-    created_at: str
+    created_at: datetime
 
     class Config:
         from_attributes = True

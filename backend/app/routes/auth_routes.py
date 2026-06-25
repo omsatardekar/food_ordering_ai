@@ -14,10 +14,6 @@ async def signup(user_data: UserSignup):
 async def login(login_data: UserLogin):
     return await login_user(login_data)
 
-@router.get("/profile")
-async def get_profile(current_user: dict = Depends(get_current_user)):
-    return current_user
-
 @router.post("/logout")
 async def logout():
     return {"message": "Successfully logged out"}
