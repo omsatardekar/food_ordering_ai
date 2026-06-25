@@ -22,7 +22,7 @@ class SearchService:
             match_data = scoring_engine.calculate_score(item, intent)
             
             # Only include items with significant relevance
-            if match_data["score"] >= 40:
+            if match_data["score"] >= 35:
                 # Add score data to item
                 item_with_score = {
                     **item,
