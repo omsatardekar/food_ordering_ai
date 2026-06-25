@@ -39,7 +39,7 @@ class SearchService:
             "query": query,
             "intent": intent,
             "count": len(results),
-            "results": results[:10] # Return top 10 matches
+            "results": results[:20] # Return top 20 matches
         }
 
 search_service = SearchService()

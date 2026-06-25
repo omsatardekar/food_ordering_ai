@@ -1,6 +1,7 @@
 """
 Keyword Dictionary for Natural Language Understanding
 Maps common terms and synonyms to categories or search keywords.
+Extened with more cultural and descriptive terms.
 """
 
 # Synonyms for categories
@@ -28,27 +29,32 @@ CATEGORY_MAPPINGS = {
     "drink": "Beverages",
     "drinks": "Beverages",
     "cold drink": "Beverages",
+    "soup": "Veg Starters",
 }
 
 # Semantic triggers for broadening search
 SEMANTIC_KEYWORDS = {
-    "light lunch": ["salad", "sandwich", "soup", "pulao", "dal"],
-    "healthy": ["steamed", "grilled", "salad", "vegetables", "leafy", "sprouts", "roasted"],
-    "heavy meal": ["biryani", "paneer", "butter masala", "thali", "mutton", "chicken", "meat"],
-    "spicy": ["tikka", "masala", "chilli", "schezwan", "kadai", "peri peri", "vindaloo", "kolhapuri"],
-    "sweet": ["halwa", "gulab jamun", "ice cream", "mousse", "pudding", "shake", "chocolate", "caramel"],
-    "cheap": ["budget", "value", "combo", "under", "affordable", "saver"],
-    "refreshing": ["mint", "lemon", "juice", "soda", "cooler", "iced", "mojito"],
-    "fried": ["pakora", "crispy", "deep fried", "fritters", "crunchy"],
-    "paneer": ["cottage cheese", "paneer"],
-    "italian": ["pasta", "pizza", "lasagna", "risotto", "cheese"],
-    "traditional": ["home style", "authentic", "classic", "heritage"],
-    "signature": ["chef special", "recommended", "must try"],
-    "soft": ["naan", "roti", "kulcha", "soft", "melt in mouth", "marshmallow", "pudding"],
-    "crispy": ["fried", "crunchy", "crisp", "papad", "crackers"],
-    "juicy": ["kebab", "meat", "grilled", "succulent"],
-    "cheesy": ["mozzarella", "parmesan", "cheese sauce", "loaded"],
+    "light lunch": ["salad", "sandwich", "soup", "pulao", "dal", "light"],
+    "healthy": ["steamed", "grilled", "salad", "vegetables", "leafy", "sprouts", "roasted", "low calorie"],
+    "heavy meal": ["biryani", "paneer", "butter masala", "thali", "mutton", "chicken", "meat", "loaded"],
+    "spicy": ["tikka", "masala", "chilli", "schezwan", "kadai", "peri peri", "vindaloo", "kolhapuri", "sizzling"],
+    "sweet": ["halwa", "gulab jamun", "ice cream", "mousse", "pudding", "shake", "chocolate", "caramel", "honey"],
+    "cheap": ["budget", "value", "combo", "under", "affordable", "saver", "deal", "student"],
+    "refreshing": ["mint", "lemon", "juice", "soda", "cooler", "iced", "mojito", "fruit"],
+    "fried": ["pakora", "crispy", "deep fried", "fritters", "crunchy", "tempura"],
+    "paneer": ["cottage cheese", "paneer", "tofu"],
+    "italian": ["pasta", "pizza", "lasagna", "risotto", "cheese", "herb"],
+    "traditional": ["home style", "authentic", "classic", "heritage", "grandma", "desi"],
+    "signature": ["chef special", "recommended", "must try", "award winning", "famous"],
+    "soft": ["naan", "roti", "kulcha", "soft", "melt in mouth", "marshmallow", "pudding", "tender"],
+    "crispy": ["fried", "crunchy", "crisp", "papad", "crackers", "nachos"],
+    "juicy": ["kebab", "meat", "grilled", "succulent", "tender"],
+    "cheesy": ["mozzarella", "parmesan", "cheese sauce", "loaded", "gouda", "chedder"],
+    "breakfast": ["poha", "upma", "paratha", "omelette", "toast", "pancakes"],
 }
 
-# Negative triggers (for "not" logic)
-NEGATION_TRIGGERS = ["not", "no", "without", "dont", "don't", "avoid", "low"]
+# Negative triggers (for context-aware negation logic)
+NEGATION_TRIGGERS = [
+    "not", "no", "without", "dont", "don't", "avoid", "low", 
+    "never", "less", "exclude", "zero", "stop"
+]
