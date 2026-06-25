@@ -132,16 +132,18 @@ const Analytics = () => {
                  <Activity className="text-emerald-400 mb-4" />
                  <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-1">Growth Rate</p>
                  <div className="flex items-end gap-2">
-                    <span className="text-4xl font-bold">12.4%</span>
-                    <span className="text-emerald-400 text-xs font-bold flex items-center mb-1"><ArrowUp size={12} /> 2.1%</span>
+                    <span className="text-4xl font-bold">{data?.growth_rate}%</span>
+                    <span className={`text-xs font-bold flex items-center mb-1 ${data?.growth_rate >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                      {data?.growth_rate >= 0 ? <ArrowUp size={12} /> : <ArrowDown size={12} />} This Month
+                    </span>
                  </div>
               </div>
               <div className="p-8 bg-white/5 rounded-[2rem] border border-white/10">
                  <ShoppingBag className="text-blue-400 mb-4" />
-                 <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-1">Repeat Customers</p>
+                 <p className="text-xs font-bold text-white/40 uppercase tracking-widest mb-1">Repeat Rate</p>
                  <div className="flex items-end gap-2">
-                    <span className="text-4xl font-bold">64.1%</span>
-                    <span className="text-rose-400 text-xs font-bold flex items-center mb-1"><ArrowDown size={12} /> 0.8%</span>
+                    <span className="text-4xl font-bold">{data?.repeat_rate}%</span>
+                    <span className="text-emerald-400 text-xs font-bold flex items-center mb-1">Loyal Users</span>
                  </div>
               </div>
            </div>

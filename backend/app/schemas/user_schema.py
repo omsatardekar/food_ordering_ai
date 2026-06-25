@@ -18,9 +18,14 @@ class UserOut(UserBase):
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None
+    email: Optional[EmailStr] = None
     location: Optional[str] = None
     phone_number: Optional[str] = None
-    role: Optional[str] = None
+    password: Optional[str] = None
+
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str
 
 class AdminCreate(BaseModel):
     name: str

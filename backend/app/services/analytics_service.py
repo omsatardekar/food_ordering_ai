@@ -99,10 +99,40 @@ class AnalyticsService:
         aov_res = await orders_col.aggregate(pipeline_aov).to_list(1)
         aov = aov_res[0]["aov"] if aov_res else 0
 
+        # Growth Rate (This month vs last month)
+        now = datetime.utcnow()
+        this_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        last_month_start = (this_month_start - timedelta(days=1)).replace(day=1)
+        
+        this_month_count = await orders_col.count_documents({"created_at": {"$gte": this_month_start}})
+        last_month_count = await orders_col.count_documents({"created_at": {"$gte": last_month_start, "$lt": this_month_start}})
+        
+        growth_rate = 0
+        if last_month_count > 0:
+            growth_rate = round(((this_month_count - last_month_count) / last_month_count) * 100, 1)
+        else:
+            growth_rate = 100.0 if this_month_count > 0 else 0.0
+
+        # Repeat Customer Rate
+        pipeline_repeat = [
+            {"$group": {"_id": "$user_id", "order_count": {"$sum": 1}}},
+            {"$group": {
+                "_id": None,
+                "total_customers": {"$sum": 1},
+                "repeat_customers": {"$sum": {"$cond": [{"$gt": ["$order_count", 1]}, 1, 0]}}
+            }}
+        ]
+        repeat_res = await orders_col.aggregate(pipeline_repeat).to_list(1)
+        repeat_rate = 0
+        if repeat_res and repeat_res[0]["total_customers"] > 0:
+            repeat_rate = round((repeat_res[0]["repeat_customers"] / repeat_res[0]["total_customers"]) * 100, 1)
+
         return {
             "orders_by_status": orders_by_status_raw,
             "revenue_by_category": revenue_by_category,
-            "average_order_value": round(aov, 2)
+            "average_order_value": round(aov, 2),
+            "growth_rate": growth_rate,
+            "repeat_rate": repeat_rate
         }
 
 analytics_service = AnalyticsService()
