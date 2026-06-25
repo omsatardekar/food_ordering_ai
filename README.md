@@ -1,57 +1,76 @@
-# Caramel & Clove - Food Ordering System
+# Caramel & Clove - Online Food Ordering System
 
-This is a full-stack food ordering website I built using React for the frontend and FastAPI (Python) for the backend. It's designed to be a complete solution for a restaurant, with separate sections for customers to order food and for admins to manage everything.
+This is a full-stack food ordering system I built for restaurants to manage their orders and for customers to order food easily. It uses React for the frontend and FastAPI (Python) for the backend, with MongoDB for storing everything.
 
-## Project Overview
+---
 
-I wanted to create something that looks professional and works smoothly. The app handles everything from user registration and login to placing orders and tracking them in real-time.
+## 🚀 AI-Based Menu Search
+A key part of this project is the search bar, which I built to be smarter than a regular keyword search. It's an AI-based system that understands what the user is looking for:
+- **Intelligent Filtering**: You can search for things like "spicy vegetarian" or "healthy" instead of just the dish name.
+- **Smart Ranking**: The search uses a scoring logic to show the most relevant dishes first based on what you typed.
+- **Better Results**: It picks up on price keywords too, helping users find exactly what fits their budget and taste.
 
-### Key Features
+---
 
-#### For Customers:
-- **Browse Menu**: A clean, organized menu with categories and search.
-- **Smart Filtering**: easily find food based on price, spice level, or vegetarian choices.
-- **Shopping Cart**: Add multiple items, update quantities, and see a full price breakdown including taxes.
-- **Order Tracking**: See the status of your order (Placed, Preparing, Ready, etc.).
-- **User Profile**: Manage your details and see your order history.
+## 🍱 Important Features
 
-#### For Admins:
-- **Menu Management**: Add new dishes, update prices, or hide items that are out of stock.
-- **User Management**: View and manage customer accounts.
-- **Order Dashboard**: Track all incoming orders and update their status as they move through the kitchen.
-- **Analytics**: Quick overview of total orders and active customers.
+### For Customers
+- **Clean Menu**: A nice, easy-to-use menu with images and dietary icons (Veg/Spicy).
+- **Cart & Checkout**: A smooth process to add items, see the total with taxes, and place orders.
+- **Live Order Tracking**: You can see exactly what's happening with your order (from Confirmed to Delivered).
+- **Personal Profile**: Save your details and look back at your past orders.
 
-## Tech Stack
+### For Admins
+- **Menu Management**: Easily add new dishes, change prices, or update descriptions.
+- **Order Dashboard**: A real-time view of all incoming orders to manage the kitchen workflow.
+- **Customer Overview**: See list of users and their activity.
+- **Quick Analytics**: A simple dashboard to see total sales and active users.
 
-- **Frontend**: React.js with Vite for a fast development experience. Use Tailwind CSS for the styling and glassmorphism effects.
-- **Backend**: FastAPI (Python) for handling API requests quickly and securely.
-- **Database**: MongoDB for storing menu items, users, and orders.
-- **Authentication**: JWT (JSON Web Tokens) to make sure only logged-in users can place orders.
+---
 
-## How to Run it Locally
+## 🛠️ Tools I Used
 
-### Prerequisites
-- Make sure you have Python and Node.js installed.
-- You'll also need MongoDB running on your machine (default port 27017).
+### Frontend
+- **React (Vite)**: For building a fast user interface.
+- **Tailwind CSS**: For all the styling and making it responsive.
+- **Lucide Icons**: For clean and modern icons.
 
-### 1. Setting up the Backend
-1. Go to the `backend` folder.
-2. Create a virtual environment: `python -m venv venv`.
-3. Activate it: `venv\Scripts\activate` (Windows).
-4. Install the requirements: `pip install -r requirements.txt`.
-5. Create a `.env` file (copy from `.env.example`) and set your secret key.
-6. Start the server: `uvicorn app.main:app --reload`.
+### Backend
+- **FastAPI**: A fast Python framework for building the API.
+- **MongoDB**: To store all the data flexibly.
+- **JWT Authentication**: To handle secure logins for users and admins.
 
-### 2. Creating an Admin
-I made a script to quickly set up an admin account:
+---
+
+## ⚙️ How to Setup
+
+### 1. Prerequisites
+- Have Python and Node.js installed on your computer.
+- Have MongoDB running locally.
+
+### 2. Backend Setup
+```bash
+cd backend
+python -m venv venv
+venv\Scripts\activate  # On Windows
+pip install -r requirements.txt
+# Create a .env file and update your secret key
+uvicorn app.main:app --reload
+```
+
+### 3. Setup Admin
+To create your first admin account, run:
 `python create_admin.py`
 (Login: admin@food.com / Password: password123)
 
-### 3. Setting up the Frontend
-1. Go to the `frontend` folder.
-2. Run `npm install` to get all dependencies.
-3. Run `npm run dev` to start the app.
-4. Open the link shown in your terminal to see the site.
+### 4. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## How the Search Works
-I implemented a smart search logic that doesn't just look for exact names. It can pick up on keywords like "spicy", "cheap", or "veg" and filter the menu automatically. It uses a scoring system to show the most relevant results first.
+---
+
+## 🎨 Design and UI
+I focused on making the UI look modern and clean. I used some modern frosted-glass effects and smooth transitions to make the experience feel high-quality and easy to navigate on any device.
