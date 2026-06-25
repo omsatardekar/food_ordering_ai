@@ -6,8 +6,6 @@ class ScoringEngine:
     """
     
     def calculate_score(self, item, intent):
-        # Start with a base score so that any item that isn't a 'hard mismatch' 
-        # has a chance of showing up, especially for simple queries.
         score = 45 
         reasons = []
         is_hard_mismatch = False
@@ -15,10 +13,10 @@ class ScoringEngine:
         # 1. Dietary Matches (High Weight + Hard Mismatch)
         if intent["vegetarian"] is not None:
             if item.get("is_vegetarian") == intent["vegetarian"]:
-                score += 40
+                score += 50
                 reasons.append("Matches dietary preference")
             else:
-                score -= 200
+                score -= 300 # Heavier penalty to override any other matches
                 is_hard_mismatch = True
                 reasons.append("Dietary mismatch")
                 
@@ -28,22 +26,25 @@ class ScoringEngine:
                 score += 40
                 reasons.append("Matches spice level")
             elif intent["spicy"] is False and item.get("is_spicy") is True:
-                # User specifically asked for NO spicy, but item is spicy
                 score -= 200
                 is_hard_mismatch = True
                 reasons.append("Excluded spicy items")
             elif intent["spicy"] is True and item.get("is_spicy") is False:
-                # User asked for spicy, but item is not spicy
-                score -= 30
+                score -= 40
                 reasons.append("Not spicy enough")
                 
-        # 3. Category Match
+        # 3. Category Match (Very High Weight)
         if intent["category"]:
             if item.get("category") == intent["category"]:
-                score += 60
+                score += 80
                 reasons.append(f"In {item.get('category')} section")
             elif intent["category"].split()[-1] == item.get("category", "").split()[-1]:
-                score += 20
+                # Matches "Main Course" part
+                score += 25
+            else:
+                # Different major category (e.g., Desserts when Main Course asked)
+                score -= 50
+                reasons.append("Different category")
                 
         # 4. Price Match
         if intent["max_price"]:
@@ -54,7 +55,7 @@ class ScoringEngine:
             elif price <= intent["max_price"] * 1.2:
                 score += 10
             else:
-                score -= 40
+                score -= 60
                 
         # 5. Keyword Matches
         name = item.get("name", "").lower()
@@ -83,9 +84,8 @@ class ScoringEngine:
         if is_hard_mismatch or score < 0:
             final_score = 0
         else:
-            # We use a lower dynamic normalization to ensure simple queries show results
-            # Max score can be ~250. Normalizing by 180 makes relevant items cross 40 easily.
-            final_score = max(0, min(int((score / 180) * 100), 100))
+            # Normalized against a higher pool (~250-300 max)
+            final_score = max(0, min(int((score / 200) * 100), 100))
         
         return {
             "score": final_score,
