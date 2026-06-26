@@ -1,76 +1,229 @@
-# Caramel & Clove - Online Food Ordering System
+# AI-POWERED FOOD ORDERING SYSTEM
 
-This is a full-stack food ordering system I built for restaurants to manage their orders and for customers to order food easily. It uses React for the frontend and FastAPI (Python) for the backend, with MongoDB for storing everything.
-
----
-
-## 🚀 AI-Based Menu Search
-A key part of this project is the search bar, which I built to be smarter than a regular keyword search. It's an AI-based system that understands what the user is looking for:
-- **Intelligent Filtering**: You can search for things like "spicy vegetarian" or "healthy" instead of just the dish name.
-- **Smart Ranking**: The search uses a scoring logic to show the most relevant dishes first based on what you typed.
-- **Better Results**: It picks up on price keywords too, helping users find exactly what fits their budget and taste.
+A full-stack food ordering system developed using **React**, **FastAPI**, and **MongoDB**. The application provides separate interfaces for customers and administrators, allowing customers to browse the menu, place orders, and track their order status, while administrators can manage menu items, orders, users, and basic business analytics.
 
 ---
 
-## 🍱 Important Features
+# Features
 
-### For Customers
-- **Clean Menu**: A nice, easy-to-use menu with images and dietary icons (Veg/Spicy).
-- **Cart & Checkout**: A smooth process to add items, see the total with taxes, and place orders.
-- **Live Order Tracking**: You can see exactly what's happening with your order (from Confirmed to Delivered).
-- **Personal Profile**: Save your details and look back at your past orders.
+## Customer Module
 
-### For Admins
-- **Menu Management**: Easily add new dishes, change prices, or update descriptions.
-- **Order Dashboard**: A real-time view of all incoming orders to manage the kitchen workflow.
-- **Customer Overview**: See list of users and their activity.
-- **Quick Analytics**: A simple dashboard to see total sales and active users.
-
----
-
-## 🛠️ Tools I Used
-
-### Frontend
-- **React (Vite)**: For building a fast user interface.
-- **Tailwind CSS**: For all the styling and making it responsive.
-- **Lucide Icons**: For clean and modern icons.
-
-### Backend
-- **FastAPI**: A fast Python framework for building the API.
-- **MongoDB**: To store all the data flexibly.
-- **JWT Authentication**: To handle secure logins for users and admins.
+* User registration and login
+* Browse food menu with images
+* Search food using natural language
+* Add or remove items from cart
+* Secure checkout process
+* Real-time order status tracking
+* View previous orders
+* Update personal profile
 
 ---
 
-## ⚙️ How to Setup
+## Admin Module
 
-### 1. Prerequisites
-- Have Python and Node.js installed on your computer.
-- Have MongoDB running locally.
+* Secure admin login
+* Add, edit, and delete menu items
+* Manage customer orders
+* Update order status
+* View registered users
+* Dashboard showing basic analytics such as:
 
-### 2. Backend Setup
+  * Total Orders
+  * Revenue
+  * Active Users
+  * Popular Menu Items
+
+---
+
+# Smart Menu Search
+
+One of the main features of this project is the menu search system.
+
+Instead of searching only by dish name, the search accepts simple natural language queries such as:
+
+> "Something spicy under ₹200"
+
+> "Healthy vegetarian food"
+
+> "Sweet dishes"
+
+The search process includes:
+
+* Extracting user preferences from the sentence
+* Matching related food categories using a keyword dictionary
+* Filtering out items that do not satisfy required conditions
+* Calculating a relevance score for matching dishes
+* Displaying results in order of relevance
+
+This provides more useful search results than a basic keyword search while keeping the implementation lightweight and easy to understand.
+
+---
+
+# Technology Stack
+
+## Frontend
+
+* React (Vite)
+* React Router
+* Tailwind CSS
+* Axios
+* Lucide React Icons
+* Recharts
+
+## Backend
+
+* FastAPI
+* Python
+* MongoDB
+* Motor (MongoDB Driver)
+* JWT Authentication
+* bcrypt
+* Pydantic
+  
+```
+
+---
+
+# Authentication
+
+The application uses **JWT (JSON Web Token)** based authentication.
+
+There are two roles:
+
+* Customer
+* Admin
+
+Protected routes are accessible only after successful authentication.
+
+---
+
+# Installation
+
+## Prerequisites
+
+* Python 3.10+
+* Node.js 18+
+* MongoDB
+
+---
+
+## Backend Setup
+
 ```bash
 cd backend
+
 python -m venv venv
-venv\Scripts\activate  # On Windows
+```
+
+Activate virtual environment
+
+Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Install dependencies
+
+```bash
 pip install -r requirements.txt
-# Create a .env file and update your secret key
+```
+
+Create a `.env` file using `.env.example` and update the required values.
+
+Start the backend server
+
+```bash
 uvicorn app.main:app --reload
 ```
 
-### 3. Setup Admin
-To create your first admin account, run:
-`python create_admin.py`
-(Login: admin@food.com / Password: password123)
+---
 
-### 4. Frontend Setup
+## Create Admin Account
+
+Run
+
 ```bash
-cd frontend
-npm install
-npm run dev
+python create_admin.py
 ```
+
+Default credentials
+
+```
+Email:
+admin@food.com
+
+Password:
+password123
+```
+
+(These can be changed after setup.)
 
 ---
 
-## 🎨 Design and UI
-I focused on making the UI look modern and clean. I used some modern frosted-glass effects and smooth transitions to make the experience feel high-quality and easy to navigate on any device.
+## Frontend Setup
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+The frontend will start on the default Vite development server.
+
+---
+
+# Main Functionalities
+
+### Customer
+
+* Register/Login
+* Browse menu
+* Smart search
+* Add to cart
+* Checkout
+* Order tracking
+* Order history
+* Profile management
+
+### Admin
+
+* Menu management
+* Order management
+* Customer management
+* Dashboard analytics
+
+---
+
+# Design
+
+The interface is designed to be simple, responsive, and easy to navigate.
+
+Some UI highlights include:
+
+* Responsive layout
+* Modern glass-style components
+* Clean typography
+* Interactive cards
+* Mobile-friendly design
+* Smooth transitions
+
+---
+
+# Future Improvements
+
+Some features that can be added in future versions include:
+
+* Online payment integration (Razorpay/Stripe)
+* Customer reviews and ratings
+* Personalized food recommendations
+* Restaurant table reservations
+* Cloud deployment
+
+---
+
+# Author
+
+**Omkar Satardekar**
