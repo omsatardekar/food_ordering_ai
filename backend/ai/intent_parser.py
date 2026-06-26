@@ -4,12 +4,12 @@ from ai.keyword_dictionary import CATEGORY_MAPPINGS, SEMANTIC_KEYWORDS, NEGATION
 class IntentParser:
     """
     Parses natural language queries into structured search filters.
-    Fixed dietary detection to avoid 'veg' matching inside 'non-veg'.
+    Optimized for dietary accuracy (Veg vs Non-Veg).
     """
     
     def parse(self, query):
-        # Normalize and keep original for some checks
-        raw_query = query.lower().strip()
+        orig_query = query.lower().strip()
+        query = f" {orig_query} " # Add padding for easier regex/word matching
         
         intent = {
             "vegetarian": None,
@@ -21,76 +21,74 @@ class IntentParser:
         }
         
         # 1. Price Extraction
-        price_match = re.search(r'(?:under|below|less than|budget|under|within|around|affordable)\s*(?:rs\.?|rupees|inr)?\s*(\d+)', raw_query)
+        price_match = re.search(r'(?:under|below|less than|budget|under|within|around)\s*(?:rs\.?|rupees|inr)?\s*(\d+)', query)
         if price_match:
             intent["max_price"] = float(price_match.group(1))
             
-        # 2. Context-Aware Negation & Intent Extraction
-        segments = re.split(r'\s*(?:and|but|with|also|,)\s*', raw_query)
+        # 2. Dietary Detection (Whole word matching to avoid "veg" in "non-veg" confusion)
+        meat_keywords = ["non-veg", "non veg", "nonveg", "chicken", "mutton", "fish", "meat", "egg", "prawns", "kebab"]
+        veg_keywords = ["vegetarian", "pure veg", "veg", "plant based", "paneer", "vegetables", "poha", "upma"]
         
+        # Check for Non-Veg FIRST to prevent "veg" substring match from taking priority
+        is_meat = any(re.search(rf'\b{word}\b', query) for word in meat_keywords)
+        is_veg = any(re.search(rf'\b{word}\b', query) for word in veg_keywords)
+        
+        # Determine strict preference
+        if is_meat:
+            intent["vegetarian"] = False
+        elif is_veg:
+            intent["vegetarian"] = True
+
+        # 3. Context-Aware segments for Spicy and Negation
+        segments = re.split(r'\s*(?:and|but|with|also|,)\s*', query)
         for segment in segments:
-            is_negated = any(re.search(rf'\b{re.escape(word)}\b', segment) for word in NEGATION_TRIGGERS)
+            is_negated = any(re.search(rf'\b{word}\b', segment) for word in NEGATION_TRIGGERS)
             
             # --- Spicy Check ---
-            spicy_words = ["spicy", "hot", "fiery", "masala", "pepper", "chilli", "tikka"]
-            if any(re.search(rf'\b{re.escape(word)}\b', segment) for word in spicy_words):
+            spicy_words = ["spicy", "hot", "fiery", "masala", "pepper", "chilli"]
+            if any(re.search(rf'\b{word}\b', segment) for word in spicy_words):
                 intent["spicy"] = False if is_negated else True
             
-            # Specific non-spicy terms
-            if any(re.search(rf'\b{re.escape(word)}\b', segment) for word in ["mild", "sweet", "bland", "not spicy"]):
+            # --- Non-Spicy Specific Check ---
+            if any(re.search(rf'\b{word}\b', segment) for word in ["mild", "sweet", "bland", "not spicy"]):
                 intent["spicy"] = False
 
-            # --- Dietary Check (Strict Word Boundaries) ---
-            meat_words = ["non veg", "non-veg", "chicken", "mutton", "fish", "meat", "egg", "nonveg", "prawns", "kebab"]
-            veg_words = ["vegetarian", "pure veg", "veg", "plant based", "paneer", "vegetables", "dal", "soya"]
-            
-            # Check for meat first
-            has_meat = any(re.search(rf'\b{re.escape(word)}\b' if ' ' not in word else re.escape(word), segment) for word in meat_words)
-            # Check for veg with strict boundary to avoid matching 'veg' in 'non-veg'
-            has_veg = any(re.search(rf'\b{re.escape(word)}\b' if ' ' not in word else re.escape(word), segment) for word in veg_words)
-            
-            if has_meat:
-                intent["vegetarian"] = True if is_negated else False
-            elif has_veg:
-                intent["vegetarian"] = False if is_negated else True
-
-        # 3. Category Detection
+        # 4. Category Detection
         for word, cat in CATEGORY_MAPPINGS.items():
-            if re.search(rf'\b{re.escape(word)}\b', raw_query):
+            if re.search(rf'\b{word}\b', query):
                 final_cat = cat
                 if intent["vegetarian"] is False:
+                    # Map categories to their non-veg counterparts if non-veg is detected
                     if cat == "Veg Starters": final_cat = "Non-Veg Starters"
                     if cat == "Veg Main Course": final_cat = "Non-Veg Main Course"
-                    # Handle Rice/Breads as well
-                    if cat == "Rice": final_cat = "Rice" # Usually Rice is ambiguous but can have non-veg
                 intent["category"] = final_cat
                 break
                 
-        # 4. Keyword & Semantic Triggers
+        # 5. Keyword & Semantic Triggers
         for trigger, related in SEMANTIC_KEYWORDS.items():
-            if re.search(rf'\b{re.escape(trigger)}\b', raw_query):
-                # Check for negation nearby
-                neg_match = any(re.search(rf'\b{re.escape(n)}\b\s+(?:\w+\s+)?{re.escape(trigger)}', raw_query) for n in NEGATION_TRIGGERS)
-                if not neg_match:
+            if re.search(rf'\b{trigger}\b', query):
+                # Simple negation check for trigger
+                trigger_match = any(re.search(rf'\b{neg}\b.*?\b{trigger}\b', query) for neg in NEGATION_TRIGGERS)
+                if not trigger_match:
                     intent["keywords"].extend(related)
                 else:
                     intent["excluded_keywords"].extend(related)
         
-        # 5. Clean Exclusions
-        words = raw_query.split()
-        is_negating = False
+        # 6. Extraction of Excluded Keywords
+        words = orig_query.split()
+        is_marking_exclusions = False
         for i, word in enumerate(words):
             if word in NEGATION_TRIGGERS:
-                is_negating = True
+                is_marking_exclusions = True
                 continue
-            if is_negating:
+            if is_marking_exclusions:
                 if len(word) > 3 and word not in ["dish", "food", "want", "some"]:
                     intent["excluded_keywords"].append(word)
                 if word in ["and", "but", "also"]:
-                    is_negating = False
+                    is_marking_exclusions = False
         
-        # Final cleanup
-        intent["keywords"] = list(set([k for k in intent["keywords"] if k not in intent["excluded_keywords"]]))
+        # Cleanup
+        intent["keywords"] = list(set(intent["keywords"]))
         intent["excluded_keywords"] = list(set(intent["excluded_keywords"]))
         
         return intent

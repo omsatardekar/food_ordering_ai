@@ -1,85 +1,101 @@
 class ScoringEngine:
     """
     Ranks menu items based on intent match.
-    Balanced strictness for dietary, spice, and price constraints.
+    Provides explainable and persuasive results with reasoning.
     """
     
     def calculate_score(self, item, intent):
-        # Base score slightly increased for better variety
-        score = 35 
+        score = 60 
         reasons = []
         is_hard_mismatch = False
         
-        # 1. Dietary Matches (High Priority)
+        demand_points = 60 
+        
+        name = item.get("name", "").lower()
+        desc = item.get("description", "").lower()
+        item_category = item.get("category", "")
+        item_category_lower = item_category.lower()
+        
+        # 0. Quick Category Filter for Spicy
+        if intent["spicy"] is True:
+            demand_points += 50
+            if any(x in item_category_lower for x in ["beverage", "dessert", "shake", "drink", "sweet"]):
+                score -= 150
+                reasons.append("Usually not spicy")
+
+        # 1. Dietary Matches
         if intent["vegetarian"] is not None:
+            demand_points += 60
             if item.get("is_vegetarian") == intent["vegetarian"]:
-                score += 55
-                reasons.append("Matches dietary preference")
+                score += 80
+                reasons.append("Perfect dietary match")
             else:
-                score -= 300
+                score -= 500
                 is_hard_mismatch = True
                 reasons.append("Dietary mismatch")
                 
-        # 2. Spice Level (Contextual strictness)
+        # 2. Spice Level
         if intent["spicy"] is not None:
+            demand_points += 60
             if item.get("is_spicy") == intent["spicy"]:
-                score += 55
-                reasons.append("Matches spice level")
-            elif intent["spicy"] is True and item.get("is_spicy") is False:
-                # User specifically asked for SPICY, but item is MILD
-                score -= 60 # Penalty instead of hard mismatch to allow "Masala" items if relevant
-                reasons.append("Not spicy enough")
+                score += 80
+                reasons.append("Matches your spice level")
             elif intent["spicy"] is False and item.get("is_spicy") is True:
-                # User asked for MILD, but item is SPICY
-                score -= 200
+                score -= 500
                 is_hard_mismatch = True
                 reasons.append("Excluded spicy items")
+            elif intent["spicy"] is True and item.get("is_spicy") is False:
+                score -= 60
+                reasons.append("Mild, but worth a try!")
                 
-        # 3. Price Match (Gradual Penalty)
+        # 3. Category Match
+        if intent["category"]:
+            demand_points += 100
+            if item_category == intent["category"]:
+                score += 150 
+                reasons.append(f"In {item_category}")
+            elif intent["category"].split()[-1].lower() in item_category_lower:
+                score += 60
+                reasons.append(f"Matches {item_category.split()[-1]} type")
+            else:
+                score -= 80
+                reasons.append(f"Different section, but a great choice!")
+                
+        # 4. Price Match
         if intent["max_price"]:
+            demand_points += 80
             price = item.get("price", 0)
             if price <= intent["max_price"]:
-                score += 55
-                reasons.append("Within your budget")
-            elif price <= intent["max_price"] * 1.15: # 15% buffer allowed for "near matches"
-                score -= (price - intent["max_price"]) * 2 # Per-rupee penalty
-                reasons.append("Slightly over budget")
+                score += 120
+                reasons.append("Perfectly in budget")
+            elif price <= intent["max_price"] * 1.2:
+                score += 40
+                reasons.append(f"Slightly over ₹{int(intent['max_price'])} but totally worth it!")
             else:
-                score -= 300
-                is_hard_mismatch = True
-                reasons.append("Exceeds budget")
-                
-        # 4. Category Match
-        if intent["category"]:
-            if item.get("category") == intent["category"]:
-                score += 65
-                reasons.append(f"In {item.get('category')} section")
-            elif intent["category"].split()[-1] == item.get("category", "").split()[-1]:
-                score += 25
-            else:
-                score -= 80 
-                reasons.append("Different category")
+                score -= 200
+                reasons.append("A bit above budget")
                 
         # 5. Keyword Matches
-        name = item.get("name", "").lower()
-        desc = item.get("description", "").lower()
-        
+        keyword_score = 0
         matched_keywords = []
-        for kw in intent["keywords"]:
-            if kw in name:
-                score += 35
-                matched_keywords.append(kw)
-            elif kw in desc:
-                score += 15
-                matched_keywords.append(kw)
+        if intent["keywords"]:
+            demand_points += 40 
+            for kw in intent["keywords"]:
+                if kw in name:
+                    keyword_score += 60
+                    matched_keywords.append(kw)
+                elif kw in desc:
+                    keyword_score += 30
+                    matched_keywords.append(kw)
         
         if matched_keywords:
-            reasons.append(f"Matches keywords: {', '.join(list(set(matched_keywords))[:2])}")
+            score += min(keyword_score, 120)
+            reasons.append(f"Matches search: {', '.join(list(set(matched_keywords))[:2])}")
             
-        # 6. Penalize Exclusions
+        # 6. Exclusions
         for ex in intent["excluded_keywords"]:
             if ex in name or ex in desc:
-                score -= 300
+                score -= 500
                 is_hard_mismatch = True
                 reasons.append(f"Excluded: {ex}")
 
@@ -87,12 +103,15 @@ class ScoringEngine:
         if is_hard_mismatch or score < 0:
             final_score = 0
         else:
-            # Normalized for a more permissive threshold
-            final_score = max(0, min(int((score / 220) * 100), 100))
+            normalization_divisor = demand_points * 1.1 
+            final_score = max(0, min(int((score / normalization_divisor) * 100), 100))
+            
+            if final_score > 90 and not is_hard_mismatch:
+                final_score = 100
         
         return {
             "score": final_score,
-            "reason": " | ".join(reasons) if reasons else "Good general choice"
+            "reason": " | ".join(reasons) if reasons else "Chef's Recommendation"
         }
 
 scoring_engine = ScoringEngine()

@@ -1,7 +1,7 @@
 """
 Keyword Dictionary for Natural Language Understanding
 Maps common terms and synonyms to categories or search keywords.
-Extened with more cultural and descriptive terms.
+Expanded for cultural dishes and healthy lifestyle terms.
 """
 
 # Synonyms for categories
@@ -34,10 +34,14 @@ CATEGORY_MAPPINGS = {
 
 # Semantic triggers for broadening search
 SEMANTIC_KEYWORDS = {
-    "light lunch": ["salad", "sandwich", "soup", "pulao", "dal", "light"],
-    "healthy": ["steamed", "grilled", "salad", "vegetables", "leafy", "sprouts", "roasted", "low calorie"],
-    "heavy meal": ["biryani", "paneer", "butter masala", "thali", "mutton", "chicken", "meat", "loaded"],
-    "spicy": ["tikka", "masala", "chilli", "schezwan", "kadai", "peri peri", "vindaloo", "kolhapuri", "sizzling"],
+    "light lunch": ["salad", "sandwich", "soup", "pulao", "dal", "light", "khichdi", "curd rice", "roti", "sabji"],
+    "healthy": [
+        "steamed", "grilled", "salad", "vegetables", "leafy", "sprouts", "roasted", 
+        "low calorie", "rajma", "chole", "dal", "protein", "oats", "millet", "wheat",
+        "boiled", "baked", "sugar free", "fruit", "juice"
+    ],
+    "heavy meal": ["biryani", "paneer", "butter masala", "thali", "mutton", "chicken", "meat", "loaded", "full meal"],
+    "spicy": ["tikka", "masala", "chilli", "schezwan", "kadai", "peri peri", "vindaloo", "kolhapuri", "sizzling", "hot"],
     "sweet": ["halwa", "gulab jamun", "ice cream", "mousse", "pudding", "shake", "chocolate", "caramel", "honey"],
     "cheap": ["budget", "value", "combo", "under", "affordable", "saver", "deal", "student"],
     "refreshing": ["mint", "lemon", "juice", "soda", "cooler", "iced", "mojito", "fruit"],
@@ -51,9 +55,11 @@ SEMANTIC_KEYWORDS = {
     "juicy": ["kebab", "meat", "grilled", "succulent", "tender"],
     "cheesy": ["mozzarella", "parmesan", "cheese sauce", "loaded", "gouda", "chedder"],
     "breakfast": ["poha", "upma", "paratha", "omelette", "toast", "pancakes"],
+    "rajma": ["rajma", "kidney beans", "red beans", "chawal"],
+    "chole": ["chickpeas", "chole", "bhature", "kabuli"],
 }
 
-# Negative triggers (for context-aware negation logic)
+# Negative triggers
 NEGATION_TRIGGERS = [
     "not", "no", "without", "dont", "don't", "avoid", "low", 
     "never", "less", "exclude", "zero", "stop"
