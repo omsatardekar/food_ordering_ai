@@ -2,8 +2,6 @@
 
 A full-stack food ordering system developed using **React**, **FastAPI**, and **MongoDB**. The application provides separate interfaces for customers and administrators, allowing customers to browse the menu, place orders, and track their order status, while administrators can manage menu items, orders, users, and basic business analytics.
 
----
-
 # Features
 
 ## Customer Module
@@ -17,7 +15,6 @@ A full-stack food ordering system developed using **React**, **FastAPI**, and **
 * View previous orders
 * Update personal profile
 
----
 
 ## Admin Module
 
@@ -80,9 +77,6 @@ This provides more useful search results than a basic keyword search while keepi
 * bcrypt
 * Pydantic
   
-```
-
----
 
 # Authentication
 
@@ -95,7 +89,7 @@ There are two roles:
 
 Protected routes are accessible only after successful authentication.
 
----
+
 
 # Installation
 
@@ -105,7 +99,7 @@ Protected routes are accessible only after successful authentication.
 * Node.js 18+
 * MongoDB
 
----
+```
 
 ## Backend Setup
 
@@ -159,7 +153,7 @@ password123
 
 (These can be changed after setup.)
 
----
+
 
 ## Frontend Setup
 
@@ -173,7 +167,6 @@ npm run dev
 
 The frontend will start on the default Vite development server.
 
----
 
 # Main Functionalities
 
@@ -195,7 +188,6 @@ The frontend will start on the default Vite development server.
 * Customer management
 * Dashboard analytics
 
----
 
 # Design
 
@@ -210,7 +202,6 @@ Some UI highlights include:
 * Mobile-friendly design
 * Smooth transitions
 
----
 
 # Future Improvements
 
@@ -222,7 +213,6 @@ Some features that can be added in future versions include:
 * Restaurant table reservations
 * Cloud deployment
 
----
 
 # Author
 
