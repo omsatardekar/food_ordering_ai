@@ -30,31 +30,13 @@ A full-stack food ordering system developed using **React**, **FastAPI**, and **
   * Active Users
   * Popular Menu Items
 
----
 
 # Smart Menu Search
 
-One of the main features of this project is the menu search system.
+This project uses a **Hybrid AI Search Architecture**:
+*   **Stage 1: Local Rule-Based Engine**: Fast, local parsing for standard keywords and common dietary preferences.
+*   **Stage 2: LLM Fallback (Groq + Llama 3.3)**: For complex, conversational queries (like "something with a kick" or "feels like a warm hug"), the system automatically falls back to the **Groq API** using Llama 3.3 for high-performance natural language understanding.
 
-Instead of searching only by dish name, the search accepts simple natural language queries such as:
-
-> "Something spicy under ₹200"
-
-> "Healthy vegetarian food"
-
-> "Sweet dishes"
-
-The search process includes:
-
-* Extracting user preferences from the sentence
-* Matching related food categories using a keyword dictionary
-* Filtering out items that do not satisfy required conditions
-* Calculating a relevance score for matching dishes
-* Displaying results in order of relevance
-
-This provides more useful search results than a basic keyword search while keeping the implementation lightweight and easy to understand.
-
----
 
 # Technology Stack
 
@@ -123,7 +105,13 @@ Install dependencies
 pip install -r requirements.txt
 ```
 
-Create a `.env` file using `.env.example` and update the required values.
+Create a `.env` file using `.env.example`. 
+
+**Important:** To enable the advanced AI search, you must add your Groq API key:
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
+*(You can get a free key from console.groq.com)*
 
 Start the backend server
 
