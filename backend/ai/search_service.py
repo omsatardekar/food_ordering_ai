@@ -9,7 +9,7 @@ class SearchService:
     
     async def search(self, query, menu_items):
         # 1. Extract Intent
-        intent = intent_parser.parse(query)
+        intent = await intent_parser.parse(query)
         
         results = []
         
